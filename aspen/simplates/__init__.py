@@ -2,7 +2,7 @@
 :mod:`simplates`
 ================
 
-The simplates module implements Aspen's file format, simplates (*.spt).
+The simplates module implements Aspen's file format, simplates (\*.spt).
 Simplates combine request processing logic (think: Rails controller, or Django
 view) with template code in one file. Here's an example::
 
