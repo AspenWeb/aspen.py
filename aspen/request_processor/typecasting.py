@@ -28,8 +28,8 @@ def apply_typecasters(typecasters, path_vars, context):
         TypecastError: if a typecast function raises an exception
     """
     for part in list(path_vars.keys()):
-        if '.' in part:
-            var, ext = part.rsplit('.', 1)
+        if ':' in part:
+            var, ext = part.rsplit(':', 1)
             if ext in typecasters:
                 try:
                     # path_vars is a Mapping not a dict, so:

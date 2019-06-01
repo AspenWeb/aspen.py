@@ -236,8 +236,8 @@ def test_virtual_path_sets_unicode_path(harness):
     assert_wildcards(harness, '/%E2%98%83/foo.html', {'bar': '\u2603'})
 
 def test_virtual_path_with_typecast(harness):
-    harness.fs.www.mk(('%year.int/foo.html', "Greetings, program!"),)
-    assert_wildcards(harness, '/1999/foo.html', {'year.int': '1999'})
+    harness.fs.www.mk(('%year:int/foo.html', "Greetings, program!"),)
+    assert_wildcards(harness, '/1999/foo.html', {'year:int': '1999'})
 
 def test_virtual_path_raises_on_direct_access(harness):
     assert_missing(harness, '/%name/foo.html')
@@ -276,8 +276,8 @@ def test_virtual_path_file_key_val_without_cast(harness):
     assert_wildcards(harness, '/foo/537.html', {'bar': '537'})
 
 def test_virtual_path_file_key_val_with_cast(harness):
-    harness.fs.www.mk(('foo/%bar.int.html.spt', NEGOTIATED_SIMPLATE),)
-    assert_wildcards(harness, '/foo/537.html', {'bar.int': '537'})
+    harness.fs.www.mk(('foo/%bar:int.html.spt', NEGOTIATED_SIMPLATE),)
+    assert_wildcards(harness, '/foo/537.html', {'bar:int': '537'})
 
 def test_virtual_path_file_key_val_percent(harness):
     harness.fs.www.mk(('foo/%bar.spt', NEGOTIATED_SIMPLATE),)

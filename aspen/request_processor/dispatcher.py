@@ -312,29 +312,22 @@ class Dispatcher(object):
         """Splits a wildcard into its components.
 
         Args:
-            wildcard (str): the string to split, e.g. :obj:`'year.int'`
+            wildcard (str): the string to split, e.g. :obj:`'year:int'`
             is_dir (bool): :obj:`True` if the wildcard is from a directory name
 
         Returns:
             a 3-tuple ``(varname, vartype, extension)``
         """
-        if '.' not in wildcard:
-            return wildcard, None, None
-        if is_dir:
+        if is_dir or '.' not in wildcard:
             extension = None
-            varname, vartype = wildcard.rsplit('.', 1)
+        else:
+            wildcard, extension = wildcard.split('.', 1)
+        if ':' in wildcard:
+            varname, vartype = wildcard.rsplit(':', 1)
             if vartype not in self.typecasters:
                 varname, vartype = wildcard, None
         else:
-            try:
-                varname, vartype, extension = wildcard.split('.', 2)
-            except ValueError:
-                varname, ambiguous = wildcard.split('.')
-                if ambiguous in self.typecasters:
-                    vartype, extension = ambiguous, None
-                else:
-                    vartype, extension = None, ambiguous
-                del ambiguous
+            varname, vartype = wildcard, None
         return varname, vartype, extension
 
 
@@ -430,7 +423,7 @@ def _dispatch_abstract(dispatcher, listnodes, is_dynamic, is_leaf, traverse, fin
         for n in wild_leaf_ns:
             wildwildvals = wildvals.copy()
             varname, vartype, leaf_ext = dispatcher.split_wildcard(splitext(n[1:])[0], False)
-            wildcard = '.'.join((varname, vartype)) if vartype else varname
+            wildcard = ':'.join((varname, vartype)) if vartype else varname
             if leaf_ext and remaining.endswith(leaf_ext):
                 wildwildvals[wildcard] = remaining[:-len(leaf_ext)-1]
             else:
@@ -455,7 +448,7 @@ def _dispatch_abstract(dispatcher, listnodes, is_dynamic, is_leaf, traverse, fin
                     debug(lambda: "found wild leaf: %r" % found_n)
                     curnode = traverse(curnode, found_n)
                     varname, vartype, _ = dispatcher.split_wildcard(splitext(found_n[1:])[0], False)
-                    wildcard = '.'.join((varname, vartype)) if vartype else varname
+                    wildcard = ':'.join((varname, vartype)) if vartype else varname
                     wildvals[wildcard] = node
                     return DispatchResult(DispatchStatus.okay, curnode, wildvals, None, canonical)
                 debug(lambda: "no match")
@@ -583,7 +576,7 @@ class UserlandDispatcher(Dispatcher):
                 if varname in varnames and varnames[varname] != dirpath:
                     raise WildcardCollision(varname)
                 varnames[varname] = dirpath
-                wildcard = '.'.join((varname, vartype)) if vartype else varname
+                wildcard = ':'.join((varname, vartype)) if vartype else varname
                 del varname, vartype
                 if is_dir:
                     slug = self.DIR_WILDCARD
