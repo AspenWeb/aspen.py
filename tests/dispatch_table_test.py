@@ -79,20 +79,25 @@ def get_table_entries():
 def get_result(harness, request_uri):
     url_path = Path(request_uri)
     dispatch_result = harness.request_processor.dispatch(url_path)
-    if dispatch_result.canonical:
-        result = '302 ' + dispatch_result.canonical
-    elif dispatch_result.status == DispatchStatus.okay:
-        result = '200'
+    if dispatch_result.match:
+        if dispatch_result.status == DispatchStatus.okay:
+            result = 'ok'
+        elif dispatch_result.status == DispatchStatus.unindexed:
+            result = 'ui'
+        else:
+            result = str(dispatch_result.status)
         fspath = dispatch_result.match
         if os.sep != posixpath.sep:
             fspath = fspath.replace(os.sep, posixpath.sep)
-        result += " " + fspath[len(harness.fs.www.root)+1:]
+        result += " " + (fspath[len(harness.fs.www.root)+1:] or '/')
         wilds = url_path
-        wildtext = ",".join("%s='%s'" % (k, wilds[k]) for k in sorted(wilds))
-        if wildtext:
+        if wilds:
+            wildtext = ",".join("%s='%s'" % (k, wilds[k]) for k in sorted(wilds))
             result += " (%s)" % wildtext
+        if dispatch_result.canonical:
+            result += " @" + dispatch_result.canonical
     else:
-        result = '404'
+        result = '-'
     return result
 
 GENERIC_SPT = """
@@ -107,8 +112,6 @@ def test_all_table_entries(harness, files, request_uri, expected):
     realfiles = tuple([ f if f.endswith('/') else (f, GENERIC_SPT) for f in files ])
     harness.fs.www.mk(*realfiles)
     result = get_result(harness, request_uri)
-    if expected.endswith("*"):
-        expected = expected[:-1]
     assert result == expected, "Requesting %r, got %r instead of %r" % (request_uri, result, expected)
 
 
