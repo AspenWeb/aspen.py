@@ -133,6 +133,7 @@ class RequestProcessor(object):
             self.www_root, self.is_dynamic, self.indices, self.typecasters,
             **kwargs.get('dispatcher_options', {})
         )
+        self.dispatcher.build_dispatch_tree()
 
         # mime.types
         # ==========

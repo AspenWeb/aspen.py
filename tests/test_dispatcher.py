@@ -69,6 +69,7 @@ def test_dispatcher_returns_a_result(dispatcher_class):
         indices     = ['index.html'],
         typecasters = {},
     )
+    dispatcher.build_dispatch_tree()
     result = dispatcher.dispatch('/', [''])
     assert result.status == DispatchStatus.okay
     assert result.match == os.path.join(www.root, 'index.html')
@@ -83,6 +84,7 @@ def test_dispatcher_returns_unindexed_for_unindexed_directory(dispatcher_class):
         indices     = [],
         typecasters = {},
     )
+    dispatcher.build_dispatch_tree()
     r = dispatcher.dispatch('/', [''])
     assert r.status == DispatchStatus.unindexed
     assert r.match == www.root + os.path.sep
@@ -102,6 +104,7 @@ def test_dispatch_when_filesystem_has_been_modified():
             indices     = ['index.html'],
             typecasters = {},
         ))
+        dispatchers[-1].build_dispatch_tree()
     # Now add an index file and try to dispatch
     www.mk(('index.html', 'Greetings, program!'))
     for dispatcher in dispatchers:

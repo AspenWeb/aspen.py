@@ -291,10 +291,9 @@ class Dispatcher(object):
         self.typecasters = typecasters
         self.file_skipper = file_skipper
         self.collision_handler = collision_handler
-        self.build_dispatch_tree()
 
     def build_dispatch_tree(self):
-        """Called by :meth:`.__init__` to build the dispatch tree.
+        """Called to build the dispatch tree.
 
         Subclasses **must** implement this method.
         """
