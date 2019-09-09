@@ -14,10 +14,7 @@ import datetime
 try:
     import simplejson as _json
 except ImportError:
-    try:
-        import json as _json
-    except ImportError:
-        _json = None
+    import json as _json
 
 
 # Allow arbitrary encoders to be registered.
@@ -57,38 +54,24 @@ register_encoder(datetime.date, lambda obj: obj.isoformat())
 register_encoder(datetime.time, lambda obj: obj.isoformat())
 
 
-# Be lazy.
-# ========
-# Allow Aspen to run without JSON support. In practice that means that Python
-# 2.5 users won't be able to use JSON resources.
-
-if _json is not None:
-    class FriendlyEncoder(_json.JSONEncoder):
-        """Add support for additional types to the default JSON encoder.
-        """
-        def default(self, obj):
-            cls = obj.__class__ # Use this instead of type(obj) because that
-                                # isn't consistent between new- and old-style
-                                # classes, and this is.
-            encode = encoders.get(cls, super(FriendlyEncoder, self).default)
-            return encode(obj)
-
-def lazy_check():
-    if _json is None:
-        raise ImportError("Neither simplejson nor json was found. Try "
-                          "installing simplejson to use dynamic JSON "
-                          "simplates.")
+class FriendlyEncoder(_json.JSONEncoder):
+    """Add support for additional types to the default JSON encoder.
+    """
+    def default(self, obj):
+        cls = obj.__class__ # Use this instead of type(obj) because that
+                            # isn't consistent between new- and old-style
+                            # classes, and this is.
+        encode = encoders.get(cls, super(FriendlyEncoder, self).default)
+        return encode(obj)
 
 
 # Main public API.
 # ================
 
 def load(*a, **kw):
-    lazy_check()
     return _json.load(*a, **kw)
 
 def dump(*a, **kw):
-    lazy_check()
     if 'cls' not in kw:
         kw['cls'] = FriendlyEncoder
     # Beautify json by default.
@@ -99,11 +82,9 @@ def dump(*a, **kw):
     return _json.dump(*a, **kw)
 
 def loads(*a, **kw):
-    lazy_check()
     return _json.loads(*a, **kw)
 
 def dumps(*a, **kw):
-    lazy_check()
     if 'cls' not in kw:
         kw['cls'] = FriendlyEncoder
     # Beautify json by default.
