@@ -90,6 +90,7 @@ class RequestProcessor(object):
                 self.project_root = os.path.join(cwd, self.project_root)
 
             self.project_root = os.path.realpath(self.project_root)
+            self.resource_directories.insert(0, self.project_root)
 
             # mime.types
             users_mimetypes = os.path.join(self.project_root, 'mime.types')
@@ -106,6 +107,7 @@ class RequestProcessor(object):
             )
 
         self.www_root = os.path.realpath(self.www_root)
+        self.resource_directories.insert(0, self.www_root)
 
         # kludge simplates -- should move out into a simplate plugin
         from ..simplates.renderers import factories
@@ -265,6 +267,14 @@ class DefaultConfiguration(object):
 
     renderer_default = 'stdlib_percent'
     "The default renderer for simplates."
+
+    resource_directories = []
+    """
+    The list of directories containing resource files. Aspen will refuse to load
+    any resource located outside these directories. The `www_root` directory is
+    automatically added to this list. The `project_root` directory is added as
+    well if it exists.
+    """
 
     store_static_files_in_ram = False
     "If set to ``True``, store the contents of static files in RAM."

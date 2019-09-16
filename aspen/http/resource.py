@@ -15,17 +15,19 @@ def open_resource(request_processor, resource_path):
     """Open a resource in read-only binary mode, after checking for symlinks.
 
     :raises AttemptedBreakout:
-        if the :obj:`resource_path` points to a file outside of both the
-        :obj:`project_root` and :obj:`www_root` directories
+        if the :obj:`resource_path` points to a file that isn't inside any of
+        the known
+        :attr:`~aspen.request_processor.DefaultConfiguration.resource_directories`
 
     This function doesn't fully protect against attackers who have the ability
-    to create and delete symlinks inside the `project_root` or `www_root`
-    whenever they want, but it makes the attack more difficult and detectable.
+    to create and delete symlinks inside the resource directories whenever they
+    want, but it makes the attack more difficult and detectable.
     """
     real_path = os.path.realpath(resource_path)
-    is_outside = not _is_subpath(real_path, request_processor.www_root)
-    if is_outside and request_processor.project_root:
-        is_outside &= not _is_subpath(real_path, request_processor.project_root)
+    is_outside = all(
+        not _is_subpath(real_path, resource_dir)
+        for resource_dir in request_processor.resource_directories
+    )
     if is_outside:
         raise AttemptedBreakout(resource_path, real_path)
     return open(real_path, 'rb')

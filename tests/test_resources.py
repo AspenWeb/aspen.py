@@ -163,23 +163,18 @@ def test_open_resource_raises_exception_when_file_is_outside(harness):
     executable = os.path.realpath(sys.executable)
     fspath = harness.fs.www.resolve('python')
     try:
-        if not hasattr(os, 'symlink'):
-            raise NotImplementedError
         os.symlink(executable, fspath)
-        assert os.readlink(fspath) == executable
-        assert os.path.realpath(fspath) == executable
     except NotImplementedError:
-        fspath = executable
+        return
     # Initialize the request processor and check the warnings.
     with catch_warnings(record=True) as messages:
         harness.hydrate_request_processor()
-        if fspath != executable:
-            assert messages
-            for m in messages:
-                warning = m.message
-                assert isinstance(warning, PossibleBreakout)
-                assert warning.sym_path == fspath
-                assert warning.real_path == executable
+        assert messages
+        for m in messages:
+            warning = m.message
+            assert isinstance(warning, PossibleBreakout)
+            assert warning.sym_path == fspath
+            assert warning.real_path == executable
     # Attempt to open the resource.
     with raises(AttemptedBreakout):
         open_resource(harness.request_processor, fspath)

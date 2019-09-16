@@ -60,6 +60,8 @@ class AttemptedBreakout(Exception):
         self.real_path = real_path
 
     def __str__(self):
+        if self.real_path == self.sym_path:
+            return "%r isn't inside a known resource directory" % self.sym_path
         return "%r is a symlink to %r" % (self.sym_path, self.real_path)
 
 
