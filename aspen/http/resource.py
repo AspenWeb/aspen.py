@@ -7,20 +7,26 @@ from ..exceptions import AttemptedBreakout, NegotiationFailure, NotFound
 from ..output import Output
 
 
-def open_resource(www_root, resource_path):
+def _is_subpath(path, root):
+    return path.startswith(root) and path[len(root)] == os.path.sep
+
+
+def open_resource(request_processor, resource_path):
     """Open a resource in read-only binary mode, after checking for symlinks.
 
     :raises AttemptedBreakout:
-        if the :arg:`resource_path` points to a file outside the :arg:`www_root`
+        if the :obj:`resource_path` points to a file outside of both the
+        :obj:`project_root` and :obj:`www_root` directories
 
     This function doesn't fully protect against attackers who have the ability
-    to create and delete symlinks inside the `www_root` whenever they want, but
-    it makes the attack more difficult and detectable.
+    to create and delete symlinks inside the `project_root` or `www_root`
+    whenever they want, but it makes the attack more difficult and detectable.
     """
-    if not os.path.isabs(resource_path):
-        resource_path = os.path.join(www_root, resource_path)
     real_path = os.path.realpath(resource_path)
-    if not real_path.startswith(www_root.rstrip(os.path.sep) + os.path.sep):
+    is_outside = not _is_subpath(real_path, request_processor.www_root)
+    if is_outside and request_processor.project_root:
+        is_outside &= not _is_subpath(real_path, request_processor.project_root)
+    if is_outside:
         raise AttemptedBreakout(resource_path, real_path)
     return open(real_path, 'rb')
 
@@ -38,7 +44,7 @@ class Static(object):
             request_processor.charset_static
         )
         if read_file:
-            with open_resource(request_processor.www_root, fspath) as f:
+            with open_resource(request_processor, fspath) as f:
                 raw = f.read()
         self.request_processor = request_processor
         self.fspath = fspath
@@ -61,7 +67,7 @@ class Static(object):
         """
         output = Output(media_type=self.media_type, charset=self.charset)
         if self.raw is None:
-            with open_resource(self.request_processor.www_root, self.fspath) as f:
+            with open_resource(self.request_processor, self.fspath) as f:
                 output.body = f.read()
         else:
             output.body = self.raw

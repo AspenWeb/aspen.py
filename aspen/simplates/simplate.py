@@ -107,7 +107,7 @@ class Simplate(Dynamic):
 
         self.renderers = {}         # mapping of media type to Renderer objects
         self.available_types = []   # ordered sequence of media types
-        with open_resource(request_processor.www_root, fspath) as fh:
+        with open_resource(request_processor, fspath) as fh:
             raw = fh.read()
         pages = self.parse_into_pages(_decode(raw))
         self.compile_pages(pages)
