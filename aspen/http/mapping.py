@@ -71,13 +71,3 @@ class Mapping(dict):
             self.all(name).append(value)
         else:
             dict.__setitem__(self, name, [value])
-
-    def ones(self, *names):
-        """Given one or more names of keys, return a list of their values.
-        """
-        lowered = []
-        for name in names:
-            n = name.lower()
-            if n not in lowered:
-                lowered.append(n)
-        return [self[name] for name in lowered]

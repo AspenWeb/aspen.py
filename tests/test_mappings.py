@@ -57,21 +57,6 @@ def test_mapping_all_returns_empty_list_when_key_is_missing():
     actual = m.all('foo')
     assert actual == expected
 
-def test_mapping_ones_returns_list_of_last_values():
-    m = Mapping()
-    m['foo'] = 1
-    m['foo'] = 2
-    m['bar'] = 3
-    m['bar'] = 4
-    m['bar'] = 5
-    m['baz'] = 6
-    m['baz'] = 7
-    m['baz'] = 8
-    m['baz'] = 9
-    expected = [2, 5, 9]
-    actual = m.ones('foo', 'bar', 'baz')
-    assert actual == expected
-
 def test_mapping_deleting_a_key_removes_it_entirely():
     m = Mapping()
     m['foo'] = 1
@@ -91,7 +76,7 @@ def test_accessing_missing_key_calls_keyerror():
 
     m.keyerror = raise_foobar
     raises(Foobar, lambda k: m[k], 'foo')
-    raises(Foobar, m.ones, 'foo')
+    raises(Foobar, m.pop, 'foo')
 
 def test_mapping_pop_returns_the_last_item():
     m = Mapping()
