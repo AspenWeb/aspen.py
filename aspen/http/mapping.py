@@ -14,6 +14,13 @@ class Mapping(dict):
 
     """
 
+    def __init__(self, *a, **kw):
+        super().__init__(*a)
+        for k, v in self.items():
+            dict.__setitem__(self, k, v.copy())
+        for k, v in kw.items():
+            self[k] = v
+
     def __getitem__(self, name):
         """Given a name, return the last value or call self.keyerror.
         """
@@ -26,6 +33,11 @@ class Mapping(dict):
         """Given a name and value, clobber any existing values.
         """
         dict.__setitem__(self, name, [value])
+
+    def copy(self):
+        return self.__class__(self)
+
+    copy.__doc__ = dict.copy.__doc__
 
     def keyerror(self, key):
         """Called when a key is missing. Default implementation simply reraises.
