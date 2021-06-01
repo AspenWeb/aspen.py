@@ -99,11 +99,3 @@ def test_renderer_padding_achieves_correct_line_numbers_in_tracebacks(harness):
     '''))
     actual = str(raises(ValueError, harness.hit, '/').value)
     assert 'line 3' in actual
-
-
-def test_aspen_renderers_is_deprecated(harness):
-    import warnings
-    with warnings.catch_warnings(record=True) as w:
-        assert w == []
-        from aspen import renderers; renderers  # (; for pyflakes)
-        assert [x.category for x in w] == [FutureWarning]

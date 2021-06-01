@@ -17,6 +17,8 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     description = 'A filesystem router for Python web frameworks',
     long_description=open(join(dirname(__file__), 'README.rst')).read(),
