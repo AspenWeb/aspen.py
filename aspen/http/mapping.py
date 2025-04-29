@@ -83,3 +83,9 @@ class Mapping(dict):
             self.all(name).append(value)
         else:
             dict.__setitem__(self, name, [value])
+
+    def setdefault(self, name, value):
+        """Set the value for the `name` key if there is none.
+        """
+        if name not in self:
+            self[name] = value
