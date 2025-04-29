@@ -1,4 +1,7 @@
-NO_DEFAULT = object()
+from ..utils import Constant
+
+
+NO_DEFAULT = Constant('NO_DEFAULT')
 
 
 class Mapping(dict):
