@@ -44,11 +44,10 @@ class Mapping(dict):
         """
         raise
 
-    def pop(self, name, default=NO_DEFAULT):
-        """Given a name, return a value.
+    def poplast(self, name, default=NO_DEFAULT):
+        """Remove and return the last value of the list for the `name` key.
 
-        This removes the last value from the list for name and returns it. If
-        there was only one value in the list then the key is removed from the
+        If there is only one value in the list, then the key is removed from the
         mapping. If name is not present and default is given, that is returned
         instead. Otherwise, self.keyerror is called.
 
@@ -63,8 +62,6 @@ class Mapping(dict):
         if not values:
             del self[name]
         return value
-
-    popall = dict.pop
 
     def all(self, name):
         """Given a name, return a list of values, possibly empty.
