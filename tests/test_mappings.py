@@ -65,55 +65,43 @@ def test_mapping_deleting_a_key_removes_it_entirely():
     del m['foo']
     assert 'foo' not in m
 
-def test_accessing_missing_key_calls_keyerror():
-    m = Mapping()
-
+def test_accessing_missing_key():
     class Foobar(Exception):
         pass
 
-    def raise_foobar(self):
-        raise Foobar
+    class FoobarMapping(Mapping):
+        def __missing__(self, name):
+            raise Foobar
 
-    m.keyerror = raise_foobar
+    m = FoobarMapping()
     raises(Foobar, lambda k: m[k], 'foo')
-    raises(Foobar, m.poplast, 'foo')
+    assert m.get('foo') is None
 
-def test_mapping_poplast_returns_the_last_item_and_leaves_the_rest():
+def test_mapping_pop_raises_KeyError_by_default():
+    m = Mapping()
+    with raises(KeyError):
+        m.pop('foo')
+
+def test_mapping_pop_removes_the_list_and_returns_its_last_item():
     m = Mapping()
     m['foo'] = 1
     m.add('foo', 2)
     m.add('foo', 3)
-    popped = m.poplast('foo')
+    popped = m.pop('foo')
     assert popped == 3
-    remainder = m.all('foo')
-    assert remainder == [1, 2]
+    assert 'foo' not in m
 
-def test_mapping_poplast_removes_the_list_if_it_only_had_one_value():
-    m = Mapping()
-    m['foo'] = 1
-    m.poplast('foo')
-    expected = []
-    actual = list(m.keys())
-    assert actual == expected
-
-def test_mapping_poplast_raises_KeyError_by_default():
+def test_mapping_popall_raises_KeyError_by_default():
     m = Mapping()
     with raises(KeyError):
-        m.poplast('foo')
+        m.popall('foo')
 
-def test_mapping_pop_returns_a_list():
+def test_mapping_popall_removes_the_list_and_returns_it():
     m = Mapping()
     m['foo'] = 1
     m.add('foo', 1)
     m.add('foo', 3)
     expected = [1, 1, 3]
-    actual = m.pop('foo')
+    actual = m.popall('foo')
     assert actual == expected
-
-def test_mapping_pop_removes_the_item():
-    m = Mapping()
-    m['foo'] = 1
-    m['foo'] = 1
-    m['foo'] = 3
-    m.pop('foo')
     assert 'foo' not in m
