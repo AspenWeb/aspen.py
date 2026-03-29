@@ -64,7 +64,7 @@ def test_resource_dunder_all_limits_vars(harness):
             [---------]
             Greetings, %(foo)s!
         """)
-    assert type(x.value) == KeyError
+    assert type(x.value) is KeyError
 
 def test_path_part_params_are_available(harness):
     output = harness.simple("""
