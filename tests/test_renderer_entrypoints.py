@@ -1,4 +1,5 @@
 import importlib
+import importlib.metadata as importlib_metadata
 import sys
 
 import pytest
@@ -7,9 +8,11 @@ import pytest
 MODULE_NAME = 'aspen.simplates.renderers'
 
 
-def import_renderers_module(monkeypatch):
+def import_renderers_module(monkeypatch, entry_points_func=None):
     monkeypatch.setitem(sys.modules, 'pkg_resources', None)
     monkeypatch.delitem(sys.modules, MODULE_NAME, raising=False)
+    if entry_points_func is not None:
+        monkeypatch.setattr(importlib_metadata, 'entry_points', entry_points_func)
     try:
         return importlib.import_module(MODULE_NAME)
     except ModuleNotFoundError as exc:
@@ -27,23 +30,7 @@ def test_renderers_module_imports_without_pkg_resources(monkeypatch):
         'jsonp_dump',
     ]
 
-
-def test_iter_entry_points_supports_legacy_mapping_results(monkeypatch):
-    module = import_renderers_module(monkeypatch)
-
-    class EntryPoint:
-        def __init__(self, name):
-            self.name = name
-
-    monkeypatch.setattr(module, 'entry_points', lambda: {
-        'aspen.renderers': [EntryPoint('legacy-renderer')],
-    })
-
-    assert [ep.name for ep in module._iter_entry_points('aspen.renderers')] == ['legacy-renderer']
-
-
-def test_iter_entry_points_supports_selectable_results(monkeypatch):
-    module = import_renderers_module(monkeypatch)
+def test_renderers_module_reads_selectable_entry_points(monkeypatch):
 
     class EntryPoint:
         def __init__(self, name):
@@ -54,8 +41,6 @@ def test_iter_entry_points_supports_selectable_results(monkeypatch):
             assert kwargs == {'group': 'aspen.renderers'}
             return [EntryPoint('selectable-renderer')]
 
-    monkeypatch.setattr(module, 'entry_points', lambda: EntryPoints())
+    module = import_renderers_module(monkeypatch, entry_points_func=lambda: EntryPoints())
 
-    assert [ep.name for ep in module._iter_entry_points('aspen.renderers')] == [
-        'selectable-renderer',
-    ]
+    assert 'selectable-renderer' in module.RENDERERS

@@ -11,15 +11,15 @@ Installation, Testing, and License
 
     $ pip install aspen
 
-It is currently tested against Python 3.11, 3.12, 3.13 and 3.14 on Linux and Windows: |checks| |codecov|
+It is currently tested against Python 3.10, 3.11, 3.12, 3.13 and 3.14 on Linux and Windows: |checks| |codecov|
 
 ``aspen`` is MIT-licensed.
 
 
 .. _GitHub: https://github.com/AspenWeb/aspen.py
 .. _PyPI: https://pypi.org/project/aspen
-.. |checks| image:: https://img.shields.io/github/checks-status/AspenWeb/pando.py/master
-   :target: https://github.com/AspenWeb/pando.py/actions/workflows/test.yml
+.. |checks| image:: https://img.shields.io/github/checks-status/AspenWeb/aspen.py/master
+   :target: https://github.com/AspenWeb/aspen.py/actions/workflows/test.yml
    :alt: GitHub master branch status
-.. |codecov| image:: https://img.shields.io/codecov/c/github/AspenWeb/pando.py
+.. |codecov| image:: https://img.shields.io/codecov/c/github/AspenWeb/aspen.py
    :alt: Codecov
