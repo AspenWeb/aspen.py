@@ -24,7 +24,7 @@ extensions = [
 ]
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = {'.rst': 'restructuredtext'}
 
 # The master toctree document.
 master_doc = 'index'
@@ -56,7 +56,6 @@ autodoc_member_order = 'bysource'
 
 import sphinx_rtd_theme
 html_theme = "sphinx_rtd_theme"
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Aspendoc'
@@ -76,10 +75,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    ('index', 'aspen', u'Aspen Documentation',
-     [u'Chad Whitacre et al.'], 1)
-]
+man_pages = []
 
 
 # -- Options for Texinfo output ------------------------------------------------
@@ -96,4 +92,4 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
