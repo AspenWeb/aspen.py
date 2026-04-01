@@ -29,7 +29,7 @@ setup( author = 'Chad Whitacre et al.'
      , packages = find_packages()
      , url = 'https://github.com/AspenWeb/aspen.py'
      , version = version
-     , python_requires = '>=3.10,<3.15'
+     , python_requires = '>=3.10'
      , zip_safe = False
      , package_data = {'aspen': ['request_processor/mime.types']}
      , install_requires = open('requirements.txt').read()
