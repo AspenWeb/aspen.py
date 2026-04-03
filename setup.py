@@ -11,10 +11,11 @@ classifiers = [ 'Development Status :: 4 - Beta'
               , 'License :: OSI Approved :: MIT License'
               , 'Natural Language :: English'
               , 'Operating System :: OS Independent'
-              , 'Programming Language :: Python :: 3.6'
-              , 'Programming Language :: Python :: 3.7'
-              , 'Programming Language :: Python :: 3.8'
-              , 'Programming Language :: Python :: 3.9'
+              , 'Programming Language :: Python :: 3.10'
+              , 'Programming Language :: Python :: 3.11'
+              , 'Programming Language :: Python :: 3.12'
+              , 'Programming Language :: Python :: 3.13'
+              , 'Programming Language :: Python :: 3.14'
               , 'Programming Language :: Python :: Implementation :: CPython'
               , 'Topic :: Internet :: WWW/HTTP :: WSGI :: Application'
                ]
@@ -28,6 +29,7 @@ setup( author = 'Chad Whitacre et al.'
      , packages = find_packages()
      , url = 'https://github.com/AspenWeb/aspen.py'
      , version = version
+     , python_requires = '>=3.10'
      , zip_safe = False
      , package_data = {'aspen': ['request_processor/mime.types']}
      , install_requires = open('requirements.txt').read()

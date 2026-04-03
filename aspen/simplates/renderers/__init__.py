@@ -1,5 +1,5 @@
 import sys
-import pkg_resources
+from importlib.metadata import entry_points
 
 
 # Built-in renderers
@@ -9,7 +9,7 @@ BUILTIN_RENDERERS = [
 
 RENDERERS = BUILTIN_RENDERERS[:]
 
-for entrypoint in pkg_resources.iter_entry_points(group='aspen.renderers'):
+for entrypoint in entry_points(group='aspen.renderers'):
     RENDERERS.append(entrypoint.name)
 
 RENDERERS.sort()
@@ -32,7 +32,7 @@ def factories(configuration):
         renderer_factories[name] = make_renderer
 
     # import renderers provided by other packages
-    for entrypoint in pkg_resources.iter_entry_points(group='aspen.renderers'):
+    for entrypoint in entry_points(group='aspen.renderers'):
         render_module = entrypoint.load()
         renderer_factories[entrypoint.name] = render_module.Factory(configuration)
     return renderer_factories

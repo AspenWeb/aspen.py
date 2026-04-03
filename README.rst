@@ -11,18 +11,15 @@ Installation, Testing, and License
 
     $ pip install aspen
 
-We test against 64-bit Python 3.6, 3.7, 3.8 and 3.9 on Linux: |travis|
-
-And we test against 32- and 64-bit Python 3.6, 3.7, 3.8 and 3.9 on Windows: |appveyor|
+It is currently tested against Python 3.10, 3.11, 3.12, 3.13 and 3.14 on Linux and Windows: |checks| |codecov|
 
 ``aspen`` is MIT-licensed.
 
 
 .. _GitHub: https://github.com/AspenWeb/aspen.py
-.. _PyPI: https://pypi.python.org/pypi/aspen
-.. |travis| image:: https://img.shields.io/travis/AspenWeb/aspen.py/master.svg
-   :target: https://travis-ci.org/AspenWeb/aspen.py
-   :alt: Linux build status
-.. |appveyor| image:: https://img.shields.io/appveyor/ci/AspenWeb/aspen-py/master.svg
-   :target: https://ci.appveyor.com/project/AspenWeb/aspen-py
-   :alt: Windows build status
+.. _PyPI: https://pypi.org/project/aspen
+.. |checks| image:: https://img.shields.io/github/checks-status/AspenWeb/aspen.py/master
+   :target: https://github.com/AspenWeb/aspen.py/actions/workflows/test.yml
+   :alt: GitHub master branch status
+.. |codecov| image:: https://img.shields.io/codecov/c/github/AspenWeb/aspen.py
+   :alt: Codecov
