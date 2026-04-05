@@ -30,6 +30,6 @@ def apply_typecasters(typecasters, path_vars, context):
                     # path_vars is a Mapping not a dict, so:
                     for v in path_vars.all(part):
                         path_vars.add(var, typecasters[ext](v, context))
-                    path_vars.popall(part)
+                    del path_vars[part]
                 except Exception:
                     raise TypecastError(ext)
